@@ -4,13 +4,13 @@ cat << "EOF"
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                                                                                         
- __   __     ______     ______   __    __     ______     __  __     ______     ______    
-/\ "-.\ \   /\  ___\   /\__  _\ /\ "-./  \   /\  __ \   /\ \/ /    /\  ___\   /\  == \   
-\ \ \-.  \  \ \  __\   \/_/\ \/ \ \ \-./\ \  \ \  __ \  \ \  _"-.  \ \  __\   \ \  __<   
- \ \_\\"\_\  \ \_____\    \ \_\  \ \_\ \ \_\  \ \_\ \_\  \ \_\ \_\  \ \_____\  \ \_\ \_\ 
-  \/_/ \/_/   \/_____/     \/_/   \/_/  \/_/   \/_/\/_/   \/_/\/_/   \/_____/   \/_/ /_/ 
-                                                                                                                                                                                                 
+
+ __   __     ______     ______   __    __     ______     __  __     ______     ______
+/\ "-.\ \   /\  ___\   /\__  _\ /\ "-./  \   /\  __ \   /\ \/ /    /\  ___\   /\  == \
+\ \ \-.  \  \ \  __\   \/_/\ \/ \ \ \-./\ \  \ \  __ \  \ \  _"-.  \ \  __\   \ \  __<
+ \ \_\\"\_\  \ \_____\    \ \_\  \ \_\ \ \_\  \ \_\ \_\  \ \_\ \_\  \ \_____\  \ \_\ \_\
+  \/_/ \/_/   \/_____/     \/_/   \/_/  \/_/   \/_/\/_/   \/_/\/_/   \/_____/   \/_/ /_/
+
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,7 +33,7 @@ if [ -z "$1" ]; then
 		echo "installing Netmaker CE"
 		INSTALL_TYPE="ce"
 		break
-		;;      
+		;;
 		2)
 		echo "installing Netmaker EE"
 		INSTALL_TYPE="ee"
@@ -107,12 +107,12 @@ elif [ "${OS}" = "FreeBSD" ]; then
 elif [ -f /etc/turris-version ]; then
 	dependencies="wireguard-tools bash jq docker.io docker-compose"
 	OS="TurrisOS"
-	update_cmd='opkg update'	
+	update_cmd='opkg update'
 	install_cmd='opkg install'
 elif [ -f /etc/openwrt_release ]; then
 	dependencies="wireguard-tools bash jq docker.io docker-compose"
 	OS="OpenWRT"
-	update_cmd='opkg update'	
+	update_cmd='opkg update'
 	install_cmd='opkg install'
 else
 	install_cmd=''
@@ -145,7 +145,7 @@ while [ -n "$1" ]; do
 				echo "  " FAILED TO INSTALL $1
 				echo "  " This may break functionality.
 			fi
-		fi	
+		fi
 	else
 		if [ "${OS}" = "OpenWRT" ] || [ "${OS}" = "TurrisOS" ]; then
 			is_installed=$(opkg list-installed $1 | grep $1)
@@ -201,7 +201,7 @@ select domain_option in "Auto Generated ($NETMAKER_BASE_DOMAIN)" "Custom Domain 
       echo "using $NETMAKER_BASE_DOMAIN for base domain"
       DOMAIN_TYPE="auto"
 	  break
-      ;;      
+      ;;
     2)
       read -p "Enter Custom Domain (make sure  *.domain points to $SERVER_PUBLIC_IP first): " domain
       NETMAKER_BASE_DOMAIN=$domain
@@ -294,14 +294,14 @@ wait_seconds 3
 
 echo "Pulling config files..."
 
-COMPOSE_URL="https://raw.githubusercontent.com/gravitl/netmaker/master/compose/docker-compose.yml" 
-CADDY_URL="https://raw.githubusercontent.com/gravitl/netmaker/master/docker/Caddyfile"
+COMPOSE_URL="https://raw.githubusercontent.com/netspeedy/netmaker/master/compose/docker-compose.yml"
+CADDY_URL="https://raw.githubusercontent.com/netspeedy/netmaker/master/docker/Caddyfile"
 if [ "$INSTALL_TYPE" = "ee" ]; then
-	COMPOSE_URL="https://raw.githubusercontent.com/gravitl/netmaker/master/compose/docker-compose.ee.yml" 
-	CADDY_URL="https://raw.githubusercontent.com/gravitl/netmaker/master/docker/Caddyfile-EE"
+	COMPOSE_URL="https://raw.githubusercontent.com/netspeedy/netmaker/master/compose/docker-compose.ee.yml"
+	CADDY_URL="https://raw.githubusercontent.com/netspeedy/netmaker/master/docker/Caddyfile-EE"
 fi
 
-wget -O /root/docker-compose.yml $COMPOSE_URL && wget -O /root/mosquitto.conf https://raw.githubusercontent.com/gravitl/netmaker/master/docker/mosquitto.conf && wget -O /root/Caddyfile $CADDY_URL && wget -q -O /root/wait.sh https://raw.githubusercontent.com/gravitl/netmaker/master/docker/wait.sh && chmod +x /root/wait.sh
+wget -O /root/docker-compose.yml $COMPOSE_URL && wget -O /root/mosquitto.conf https://raw.githubusercontent.com/netspeedy/netmaker/master/docker/mosquitto.conf && wget -O /root/Caddyfile $CADDY_URL && wget -q -O /root/wait.sh https://raw.githubusercontent.com/netspeedy/netmaker/master/docker/wait.sh && chmod +x /root/wait.sh
 
 mkdir -p /etc/netmaker
 
@@ -312,10 +312,10 @@ sed -i "s/NETMAKER_BASE_DOMAIN/$NETMAKER_BASE_DOMAIN/g" /root/Caddyfile
 sed -i "s/NETMAKER_BASE_DOMAIN/$NETMAKER_BASE_DOMAIN/g" /root/docker-compose.yml
 sed -i "s/REPLACE_MASTER_KEY/$MASTER_KEY/g" /root/docker-compose.yml
 sed -i "s/YOUR_EMAIL/$EMAIL/g" /root/Caddyfile
-sed -i "s/REPLACE_MQ_ADMIN_PASSWORD/$MQ_PASSWORD/g" /root/docker-compose.yml 
+sed -i "s/REPLACE_MQ_ADMIN_PASSWORD/$MQ_PASSWORD/g" /root/docker-compose.yml
 if [ "$INSTALL_TYPE" = "ee" ]; then
-	sed -i "s~YOUR_LICENSE_KEY~$LICENSE_KEY~g" /root/docker-compose.yml 
-	sed -i "s/YOUR_ACCOUNT_ID/$ACCOUNT_ID/g" /root/docker-compose.yml 
+	sed -i "s~YOUR_LICENSE_KEY~$LICENSE_KEY~g" /root/docker-compose.yml
+	sed -i "s/YOUR_ACCOUNT_ID/$ACCOUNT_ID/g" /root/docker-compose.yml
 fi
 echo "Starting containers..."
 
@@ -342,7 +342,7 @@ elif [[ "$curlresponse" == *"left intact"* ]]; then
   break
 else
   secs=$(($i*5+10))
-  echo "    Issue establishing connection...retrying in $secs seconds..."       
+  echo "    Issue establishing connection...retrying in $secs seconds..."
 fi
 sleep $secs
 done
@@ -393,7 +393,7 @@ done
 
 if [[ ! -z "$SERVER_ID"  ]]; then
 	curl -o /dev/null -s -X POST -H "Authorization: Bearer $MASTER_KEY" -H 'Content-Type: application/json' https://api.${NETMAKER_BASE_DOMAIN}/api/nodes/netmaker/$SERVER_ID/createingress
-fi 
+fi
 )}
 
 set +e
