@@ -4,7 +4,7 @@ services:
   netmaker:
     container_name: netmaker
     image: gravitl/netmaker:v0.17.0
-    cap_add: 
+    cap_add:
       - NET_ADMIN
       - NET_RAW
       - SYS_MODULE
@@ -15,9 +15,9 @@ services:
       - net.ipv6.conf.all.forwarding=1
     restart: always
     volumes:
-      - dnsconfig:/root/config/dnsconfig
-      - sqldata:/root/data
-      - mosquitto_data:/etc/netmaker
+      - ./dnsconfig:/root/config/dnsconfig
+      - ./sqldata:/root/data
+      - ./mosquitto_data:/etc/netmaker
     environment:
       SERVER_NAME: "broker.NETMAKER_BASE_DOMAIN"
       SERVER_HOST: "SERVER_PUBLIC_IP"
@@ -57,9 +57,9 @@ services:
     container_name: caddy
     restart: unless-stopped
     volumes:
-      - /root/Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_conf:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_data:/data
+      - ./caddy_conf:/config
     ports:
       - "80:80"
       - "443:443"
@@ -71,7 +71,7 @@ services:
       - netmaker
     restart: always
     volumes:
-      - dnsconfig:/root/dnsconfig
+      - ./dnsconfig:/root/dnsconfig
   mq:
     container_name: mq
     image: eclipse-mosquitto:2.0.15-openssl
@@ -82,17 +82,10 @@ services:
     environment:
       NETMAKER_SERVER_HOST: "https://api.NETMAKER_BASE_DOMAIN"
     volumes:
-      - /root/mosquitto.conf:/mosquitto/config/mosquitto.conf
-      - /root/wait.sh:/mosquitto/config/wait.sh
-      - mosquitto_data:/mosquitto/data
-      - mosquitto_logs:/mosquitto/log
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./wait.sh:/mosquitto/config/wait.sh
+      - ./mosquitto_data:/mosquitto/data
+      - ./mosquitto_logs:/mosquitto/log
     ports:
       - "1883:1883"
       - "8883:8883"
-volumes:
-  caddy_data: {}
-  caddy_conf: {}
-  sqldata: {}
-  dnsconfig: {}
-  mosquitto_data: {}
-  mosquitto_logs: {}
