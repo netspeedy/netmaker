@@ -18,6 +18,7 @@ services:
       - ./dnsconfig:/root/config/dnsconfig
       - ./sqldata:/root/data
       - ./mosquitto_data:/etc/netmaker
+      - /lib/modules:/lib/modules
     environment:
       SERVER_NAME: "broker.NETMAKER_BASE_DOMAIN"
       SERVER_HOST: "SERVER_PUBLIC_IP"
